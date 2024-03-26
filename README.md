@@ -1,6 +1,7 @@
 ### Infinite image gallery based on IntersectionObserver() & @tanstack/react-query
+### with light and dark mode and image uploading
 
-[Visit site](https://next14-authv5-sxidsvit.vercel.app/)
+[Visit site](https://infinite-image-gallery-sxidsvit.vercel.app/)
 
 ![](demo.gif)
 
