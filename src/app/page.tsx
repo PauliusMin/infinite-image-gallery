@@ -29,7 +29,7 @@ export default function Home() {
   })
 
   useEffect(() => {
-    if (!hasNextPage || pagesFetched >= 5) return
+    if (!hasNextPage || pagesFetched === 5) return
     const observer = new IntersectionObserver((entries) => {
       if (entries.some((entry) => entry.isIntersecting)) {
         fetchNextPage()
@@ -93,12 +93,12 @@ const total = catsPhotos.length;
           ))}
         </main>
       )}
-      {hasNextPage && (pagesFetched < 5) && (
+      {hasNextPage && (pagesFetched !== 5) && (
         <div ref={sentinelRef} className="mx-auto">
           <Loading />
         </div>
       )}
-      {pagesFetched >= 5 && hasNextPage && (
+      {pagesFetched === 5 && hasNextPage && (
         <div className="mx-auto my-5">
           <button
             disabled={isLoading}
