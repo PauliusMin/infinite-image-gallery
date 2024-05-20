@@ -1,30 +1,36 @@
 "use client";
-import { Photo } from "@/type";
 import React from "react";
+
+import Image from "next/image"
+import { Cat } from "@/type";
 import { TbCloudDownload } from "react-icons/tb";
 import { useState } from "react";
 import { saveAs } from "file-saver";
 import Loading from "./Loading";
 type Props = {
-  photo: Photo;
+  cat: Cat;
 };
 
-export default function ImageCard({ photo }: Props) {
+export default function ImageCard({ cat }: Props) {
+  const isAnimatedImage = cat.url.indexOf(".gif") > -1;
+  
   return (
     <div className="relative mb-4   transition-all overflow-hidden break-inside-avoid group hover:brightness-95 ">
-      <DownloadBtn photo={photo} />
-      <img
+      <DownloadBtn cat={cat} />
+      <Image
         className="w-auto h-auto max-w-full max-h-full object-contain "
-        height={500}
-        width={500}
-        src={photo.urls.regular}
-        alt="img"
+        height={cat.height}
+        width={cat.width}
+        src={cat.url}
+        alt={`Cat image, id: ${cat.id}`}
+        layout="responsive"
+        unoptimized={isAnimatedImage}
       />
     </div>
   );
 }
 
-function DownloadBtn({ photo }: Props) {
+function DownloadBtn({ cat }: Props) {
   const [isDownloading, setIsDownloading] = useState(false);
 
   async function downloadImage(imageUrl: string, imageName: string) {
@@ -41,7 +47,7 @@ function DownloadBtn({ photo }: Props) {
 
   return (
     <button
-      onClick={() => downloadImage(photo.urls.regular, photo.id)}
+      onClick={() => downloadImage(cat.url, cat.id)}
       className="bg-black/80  top-5 rounded-full hover:bg-black/50 right-5 absolute p-2 border"
     >
       {isDownloading ? (
