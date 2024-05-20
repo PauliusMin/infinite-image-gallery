@@ -8,6 +8,7 @@ import { fetchImages } from '@/server'
 import { useDebounce } from 'use-debounce'
 import Loading from '@/components/Loading'
 import ImageCard from '@/components/ImageCard'
+import GoogleAd from '@/components/GoogleAd';
 
 export default function Home() {
   const sentinelRef = useRef(null)
@@ -89,7 +90,10 @@ const total = catsPhotos.length;
       ) : (
         <main className="columns-1 md:columns-2 xl:columns-4 gap-4 p-3">
           {catsPhotos?.map((catPhoto, i) => (
-            <ImageCard key={i} cat={catPhoto} />
+            <>
+              <ImageCard key={i} cat={catPhoto} />
+              {(i + 22) % 24 === 0 && <GoogleAd key={`ad-${i}`} addId={`div-gpt-ad-12345-${i}`} />}
+            </>
           ))}
         </main>
       )}
