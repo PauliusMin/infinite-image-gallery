@@ -13,8 +13,9 @@ export default function Home() {
   const sentinelRef = useRef(null)
   const [search, setSearch] = useState('')
   const [value] = useDebounce(search, 300)
+  const [pagesFetched, setPagesFetched] = useState(0);
 
-  const { isLoading, data, hasNextPage, fetchNextPage } = useInfiniteQuery<
+  const { isLoading, data, hasNextPage, fetchNextPage} = useInfiniteQuery<
   Cat[],
     Error
   >({
@@ -28,7 +29,7 @@ export default function Home() {
   })
 
   useEffect(() => {
-    if (!hasNextPage) return
+    if (!hasNextPage || pagesFetched >= 5) return
     const observer = new IntersectionObserver((entries) => {
       if (entries.some((entry) => entry.isIntersecting)) {
         fetchNextPage()
@@ -42,7 +43,11 @@ export default function Home() {
         observer.unobserve(sentinelRef.current)
       }
     }
-  }, [hasNextPage, fetchNextPage])
+  }, [hasNextPage, fetchNextPage, pagesFetched])
+
+  useEffect(() => {
+    setPagesFetched((pagesFetched) => data?.pages.length ?? pagesFetched)
+  }, [data?.pages.length])
 
   if (!data) {
     return <></>
@@ -88,9 +93,20 @@ const total = catsPhotos.length;
           ))}
         </main>
       )}
-      {hasNextPage && (
+      {hasNextPage && (pagesFetched < 5) && (
         <div ref={sentinelRef} className="mx-auto">
           <Loading />
+        </div>
+      )}
+      {pagesFetched >= 5 && hasNextPage && (
+        <div className="mx-auto my-5">
+          <button
+            disabled={isLoading}
+            onClick={() => fetchNextPage()}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Load More
+          </button>
         </div>
       )}
     </div>
